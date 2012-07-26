@@ -47,7 +47,6 @@ PRODUCT_PACKAGES += \
     libreference-cdma-sms \
     rild \
     radiooptions \
-    sh 
 
 # Wifi
 PRODUCT_PACKAGES += \
@@ -60,7 +59,6 @@ PRODUCT_PACKAGES += \
     crda \
     regulatory.bin \
     calibrator
-
 
 # Bluetooth
 PRODUCT_PACKAGES += \
@@ -80,7 +78,11 @@ PRODUCT_PACKAGES += \
     Superuser \
     su \
     DockAudio \
-
+    tinymix \
+    tinycap \
+    tinyplay \
+    parse_hdmi_edid \
+    sh 
 
 PRODUCT_PACKAGES += \
     librs_jni \
@@ -93,7 +95,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += wifi_tether_v3_2-pre1
 PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/lib/libwtnativetask.so:system/lib/libwtnativetask.so \
-
 
 # Rootfs files
 PRODUCT_COPY_FILES += \
@@ -112,8 +113,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/motorola/solana/kexec/arm_kexec.ko:system/etc/kexec/arm_kexec.ko \
     device/motorola/solana/kexec/atags.ko:system/etc/kexec/atags.ko \
-    device/motorola/solana/kexec/atags3:system/etc/kexec/atags3 \
-    device/motorola/solana/kexec/devtree7:system/etc/kexec/devtree7 \
+    device/motorola/solana/kexec/atags:system/etc/kexec/atags3 \
+    device/motorola/solana/kexec/devtree:system/etc/kexec/devtree7 \
     device/motorola/solana/kexec/kexec:system/etc/kexec/kexec \
     device/motorola/solana/kexec/kexec.ko:system/etc/kexec/kexec.ko \
     device/motorola/solana/kexec/physicalmem:system/etc/kexec/physicalmem \
@@ -148,24 +149,25 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/bin/battd:system/bin/battd \
     device/motorola/solana/prebuilt/bin/mount_ext3.sh:system/bin/mount_ext3.sh \
     device/motorola/solana/prebuilt/bin/strace:system/bin/strace \
+    device/motorola/solana/prebuilt/etc/firmware/ducati-m3.512MB.bin:/system/etc/firmware/ducati-m3.512MB.bin \
     device/motorola/solana/prebuilt/etc/gps.conf:system/etc/gps.conf \
     device/motorola/solana/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
     device/motorola/solana/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
     device/motorola/solana/prebuilt/usr/idc/cpcap-key.idc:system/usr/idc/cpcap-key.idc \
     device/motorola/solana/prebuilt/usr/idc/light-prox.idc:system/usr/idc/light-prox.idc \
     device/motorola/solana/prebuilt/usr/idc/mapphone-switch.idc:system/usr/idc/mapphone-switch.idc \
-    device/motorola/solana/prebuilt/usr/idc/omap-keypad.idc:system/usr/idc/omap-keypad.idc \
+    device/motorola/solana/prebuilt/usr/idc/omap4-keypad.idc:system/usr/idc/omap4-keypad.idc \
     device/motorola/solana/prebuilt/usr/idc/qtouch-touchscreen.idc:system/usr/idc/qtouch-touchscreen.idc \
     device/motorola/solana/prebuilt/usr/keychars/cpcap-key.kcm:system/usr/keychars/cpcap-key.kcm \
     device/motorola/solana/prebuilt/usr/keychars/light-prox.kcm:system/usr/keychars/light-prox.kcm \
     device/motorola/solana/prebuilt/usr/keychars/mapphone-switch.kcm:system/usr/keychars/mapphone-switch.kcm \
-    device/motorola/solana/prebuilt/usr/keychars/omap-keypad.kcm:system/usr/keychars/omap-keypad.kcm \
+    device/motorola/solana/prebuilt/usr/keychars/omap4-keypad.kcm:system/usr/keychars/omap4-keypad.kcm \
     device/motorola/solana/prebuilt/usr/keychars/qtouch-touchscreen.kcm:system/usr/keychars/qtouch-touchscreen.kcm \
     device/motorola/solana/prebuilt/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
     device/motorola/solana/prebuilt/usr/keylayout/cpcap-key.kl:system/usr/keylayout/cpcap-key.kl \
     device/motorola/solana/prebuilt/usr/keylayout/light-prox.kl:system/usr/keylayout/light-prox.kl \
     device/motorola/solana/prebuilt/usr/keylayout/mapphone-switch.kl:system/usr/keylayout/mapphone-switch.kl \
-    device/motorola/solana/prebuilt/usr/keylayout/omap-keypad.kl:system/usr/keylayout/omap-keypad.kl \
+    device/motorola/solana/prebuilt/usr/keylayout/omap4-keypad.kl:system/usr/keylayout/omap4-keypad.kl \
     device/motorola/solana/prebuilt/usr/keylayout/qtouch-touchscreen.kl:system/usr/keylayout/qtouch-touchscreen.kl \
 
 # Graphics
@@ -185,19 +187,6 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/imgtec/bin/pvrsrvinit_SGX540_120:/system/bin/pvrsrvinit \
     device/motorola/solana/prebuilt/imgtec/bin/pvrsrvctl:/system/bin/pvrsrvctl \
     device/motorola/solana/prebuilt/imgtec/etc/powervr.ini:/system/etc/powervr.ini \
-
-# Temporarily use prebuilt DOMX
-# Prebuilts /system/lib
-PRODUCT_COPY_FILES += \
-    device/motorola/solana/prebuilt/lib/libdomx.so:/system/lib/libdomx.so \
-    device/motorola/solana/prebuilt/lib/libmm_osal.so:/system/lib/libmm_osal.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.MISC.SAMPLE.so:/system/lib/libOMX.TI.DUCATI1.MISC.SAMPLE.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.VIDEO.CAMERA.so:/system/lib/libOMX.TI.DUCATI1.VIDEO.CAMERA.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.VIDEO.DECODER.secure.so:/system/lib/libOMX.TI.DUCATI1.VIDEO.DECODER.secure.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.VIDEO.DECODER.so:/system/lib/libOMX.TI.DUCATI1.VIDEO.DECODER.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.VIDEO.H264E.so:/system/lib/libOMX.TI.DUCATI1.VIDEO.H264E.so \
-    device/motorola/solana/prebuilt/lib/libOMX.TI.DUCATI1.VIDEO.MPEG4E.so:/system/lib/libOMX.TI.DUCATI1.VIDEO.MPEG4E.so \
-    device/motorola/solana/prebuilt/lib/libOMX_Core.so:/system/lib/libOMX_Core.so \
 
 # Wifi firmware
 PRODUCT_COPY_FILES += \
