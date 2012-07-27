@@ -60,6 +60,10 @@ PRODUCT_PACKAGES += \
     regulatory.bin \
     calibrator
 
+# Wifi Direct
+PRODUCT_PACKAGES += \
+    ti_wfd_libs
+
 # Bluetooth
 PRODUCT_PACKAGES += \
     bt_sco_app \
@@ -97,6 +101,8 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/lib/libwtnativetask.so:system/lib/libwtnativetask.so \
 
 # Rootfs files
+#    device/motorola/solana/root/omaplfb_sgx540_120.ko:/root/omaplfb_sgx540_120.ko \
+#    device/motorola/solana/root/pvrsrvkm_sgx540_120.ko:/root/pvrsrvkm_sgx540_120.ko \
 PRODUCT_COPY_FILES += \
     device/motorola/solana/root/default.prop:/root/default.prop \
     device/motorola/solana/root/init.rc:/root/init.rc \
@@ -105,11 +111,10 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/root/ueventd.rc:/root/ueventd.rc \
     device/motorola/solana/root/ueventd.mapphone_cdma.rc:/root/ueventd.mapphone_cdma.rc \
     device/motorola/solana/root/ueventd.mapphone_umts.rc:/root/ueventd.mapphone_umts.rc \
-    device/motorola/solana/root/omaplfb_sgx540_120.ko:/root/omaplfb_sgx540_120.ko \
-    device/motorola/solana/root/pvrsrvkm_sgx540_120.ko:/root/pvrsrvkm_sgx540_120.ko \
 
 #    out/target/product/solana/kernel:system/etc/kexec/zImage \
 # Kexec files
+#    device/motorola/solana/kernel:system/etc/kexec/zImage \
 PRODUCT_COPY_FILES += \
     device/motorola/solana/kexec/arm_kexec.ko:system/etc/kexec/arm_kexec.ko \
     device/motorola/solana/kexec/atags.ko:system/etc/kexec/atags.ko \
@@ -120,7 +125,6 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/kexec/physicalmem:system/etc/kexec/physicalmem \
     device/motorola/solana/kexec/procfs_rw.ko:system/etc/kexec/procfs_rw.ko \
     device/motorola/solana/kexec/uart.ko:system/etc/kexec/uart.ko \
-    device/motorola/solana/kernel:system/etc/kexec/zImage \
     out/target/product/solana/ramdisk.img:system/etc/kexec/ramdisk.gz \
 
 # Permissions files
@@ -211,10 +215,10 @@ PRODUCT_LOCALES += en_US
 
 
 # copy all kernel modules under the "modules" directory to system/lib/modules
-PRODUCT_COPY_FILES += $(shell \
-    find device/motorola/solana/modules -name '*.ko' \
-    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
-    | tr '\n' ' ')
+#PRODUCT_COPY_FILES += $(shell \
+#    find device/motorola/solana/modules -name '*.ko' \
+#    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
+#    | tr '\n' ' ')
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 LOCAL_KERNEL := device/motorola/solana/kernel

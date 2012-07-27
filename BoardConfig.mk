@@ -23,28 +23,29 @@ TARGET_GLOBAL_CFLAGS += -DNEEDS_ARM_ERRATA_754319_754320
 
 
 # Kernel
-BOARD_KERNEL_CMDLINE := root=/dev/ram0 rw mem=512M@0x80000000 console=ttyO2,115200n8 vram=10300K omapfb.vram=0:8256K,1:4K,2:2040K init=/init ip=off brdrev=P2A ramdisk_size=20480 mmcparts=mmcblk1:p7(pds),p15(boot),p16(recovery),p17(cdrom),p18(misc),p19(cid),p20(kpanic),p21(system),p22(cache),p23(preinstall),p24(userdata),p25(emstorage) androidboot.bootloader=0x0A64
+BOARD_KERNEL_CMDLINE := root=/dev/ram0 rw mem=512M@0x80000000 console=ttyO2,115200n8 init=/init ip=off brdrev=P2A ramdisk_size=20480 mmcparts=mmcblk1:p7(pds),p15(boot),p16(recovery),p17(cdrom),p18(misc),p19(cid),p20(kpanic),p21(system),p22(cache),p23(preinstall),p24(userdata),p25(emstorage) androidboot.bootloader=0x0A64
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_PAGE_SIZE := 0x4096
 
 # Kernel Build
-#TARGET_KERNEL_SOURCE := kernel/motorola/solana
-#TARGET_KERNEL_CONFIG := hashcode_defconfig
+TARGET_KERNEL_SOURCE := kernel/motorola/solana
+TARGET_KERNEL_CONFIG := hashcode_defconfig
 TARGET_PREBUILT_KERNEL := device/motorola/solana/kernel
 
-#KERNEL_EXTERNAL_MODULES:
-#	make -C kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx KERNEL_DIR=$(KERNEL_OUT) KLIB=$(KERNEL_OUT) KLIB_BUILD=$(KERNEL_OUT) ARCH=arm CROSS_COMPILE="arm-eabi-"
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/compat/compat.ko $(KERNEL_MODULES_OUT)
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/net/mac80211/mac80211.ko $(KERNEL_MODULES_OUT)
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/net/wireless/cfg80211.ko $(KERNEL_MODULES_OUT)
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx.ko $(KERNEL_MODULES_OUT)
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx_spi.ko $(KERNEL_MODULES_OUT)
-#	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx_sdio.ko $(KERNEL_MODULES_OUT)
-#	make -C kernel/motorola/solana/external/sgx/src/eurasia_km/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELSRC=$(KERNEL_OUT)/../../../../../../kernel/motorola/solana KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
-#	mv $(KERNEL_OUT)/../../target/kbuild/omaplfb_sgx540_120.ko $(TARGET_ROOT_OUT)/omaplfb_sgx540_120.ko
-#	mv $(KERNEL_OUT)/../../target/kbuild/pvrsrvkm_sgx540_120.ko $(TARGET_ROOT_OUT)/pvrsrvkm_sgx540_120.ko
+KERNEL_EXTERNAL_MODULES:
+	make -C kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx KERNEL_DIR=$(KERNEL_OUT) KLIB=$(KERNEL_OUT) KLIB_BUILD=$(KERNEL_OUT) ARCH=arm CROSS_COMPILE="arm-eabi-"
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/compat/compat.ko $(KERNEL_MODULES_OUT)
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/net/mac80211/mac80211.ko $(KERNEL_MODULES_OUT)
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/net/wireless/cfg80211.ko $(KERNEL_MODULES_OUT)
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx.ko $(KERNEL_MODULES_OUT)
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx_spi.ko $(KERNEL_MODULES_OUT)
+	mv kernel/motorola/solana/external/wlan/mac80211/compat_wl12xx/drivers/net/wireless/wl12xx/wl12xx_sdio.ko $(KERNEL_MODULES_OUT)
+	make -C kernel/motorola/solana/external/sgx/src/eurasia_km/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELSRC=$(KERNEL_OUT)/../../../../../../kernel/motorola/solana KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
+	mv $(KERNEL_OUT)/../../target/kbuild/omaplfb_sgx540_120.ko $(TARGET_ROOT_OUT)/omaplfb_sgx540_120.ko
+	mv $(KERNEL_OUT)/../../target/kbuild/pvrsrvkm_sgx540_120.ko $(TARGET_ROOT_OUT)/pvrsrvkm_sgx540_120.ko
+	cp $(KERNEL_OUT)/../../kernel $(KERNEL_OUT)/../../system/etc/kexec/zImage
 
-#TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
+TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
 
 
 # Storage / Sharing
