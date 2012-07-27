@@ -126,6 +126,7 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/kexec/procfs_rw.ko:system/etc/kexec/procfs_rw.ko \
     device/motorola/solana/kexec/uart.ko:system/etc/kexec/uart.ko \
     out/target/product/solana/ramdisk.img:system/etc/kexec/ramdisk.gz \
+    out/target/product/solana/kernel:system/etc/kexec/zImage \
 
 # Permissions files
 PRODUCT_COPY_FILES += \
