@@ -100,9 +100,9 @@ PRODUCT_PACKAGES += wifi_tether_v3_2-pre1
 PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/lib/libwtnativetask.so:system/lib/libwtnativetask.so \
 
-# Rootfs files
 #    device/motorola/solana/root/omaplfb_sgx540_120.ko:/root/omaplfb_sgx540_120.ko \
 #    device/motorola/solana/root/pvrsrvkm_sgx540_120.ko:/root/pvrsrvkm_sgx540_120.ko \
+# Rootfs files
 PRODUCT_COPY_FILES += \
     device/motorola/solana/root/default.prop:/root/default.prop \
     device/motorola/solana/root/init.rc:/root/init.rc \
@@ -112,9 +112,7 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/root/ueventd.mapphone_cdma.rc:/root/ueventd.mapphone_cdma.rc \
     device/motorola/solana/root/ueventd.mapphone_umts.rc:/root/ueventd.mapphone_umts.rc \
 
-#    out/target/product/solana/kernel:system/etc/kexec/zImage \
 # Kexec files
-#    device/motorola/solana/kernel:system/etc/kexec/zImage \
 PRODUCT_COPY_FILES += \
     device/motorola/solana/kexec/arm_kexec.ko:system/etc/kexec/arm_kexec.ko \
     device/motorola/solana/kexec/atags.ko:system/etc/kexec/atags.ko \
