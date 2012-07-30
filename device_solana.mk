@@ -86,7 +86,11 @@ PRODUCT_PACKAGES += \
     tinycap \
     tinyplay \
     parse_hdmi_edid \
-    sh 
+    sh \
+
+#    alsa_amixer \
+#    alsa_aplay \
+#    alsa_ctl \
 
 PRODUCT_PACKAGES += \
     librs_jni \
@@ -100,8 +104,6 @@ PRODUCT_PACKAGES += wifi_tether_v3_2-pre1
 PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/lib/libwtnativetask.so:system/lib/libwtnativetask.so \
 
-#    device/motorola/solana/root/omaplfb_sgx540_120.ko:/root/omaplfb_sgx540_120.ko \
-#    device/motorola/solana/root/pvrsrvkm_sgx540_120.ko:/root/pvrsrvkm_sgx540_120.ko \
 # Rootfs files
 PRODUCT_COPY_FILES += \
     device/motorola/solana/root/default.prop:/root/default.prop \
