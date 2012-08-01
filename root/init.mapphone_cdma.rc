@@ -73,7 +73,6 @@ on fs
 on post-fs
 # Enable PVR modules
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
-    insmod /system/lib/modules/omaplfb_sgx540_120.ko
 
     chown system system /pds
     chmod 0775 /pds
@@ -133,7 +132,7 @@ on post-fs
 # Configure kernel options
 
 # Disable automatic power control for OHCI USB IPC Temporarily
-    write /sys/devices/platform/ohci-omap3/usb1/1-1/power/control auto
+#    write /sys/devices/platform/ohci-omap3/usb1/1-1/power/control auto
 
 # NFC configuration
     # Reset system time
@@ -1014,11 +1013,11 @@ on property:persist.factory.allow_adb=1
 on property:persist.factory.allow_adb=0
     write /sys/class/android_usb/android0/pc_command_adb " "
 #start Authentec VPN service
-service vpnclientpm /system/bin/vpnclientpm
-    class main
-    user root
-    oneshot
-    user root
+#service vpnclientpm /system/bin/vpnclientpm
+#    class main
+#    user root
+#    oneshot
+#    user root
 service gadget-qbp-modem /system/bin/tty2ttyd persist.ril.modem.ttydevice /dev/ttyGS2 0 1024
     user radio
     group radio
