@@ -189,8 +189,8 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/imgtec/lib/libsrv_init_SGX540_120.so:/system/vendor/lib/libsrv_init_SGX540_120.so \
     device/motorola/solana/prebuilt/imgtec/lib/libsrv_um_SGX540_120.so:/system/vendor/lib/libsrv_um_SGX540_120.so \
     device/motorola/solana/prebuilt/imgtec/lib/libusc_SGX540_120.so:/system/vendor/lib/libusc_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvinit:/system/bin/pvrsrvinit \
-    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvctl_SGX540_120:/system/bin/pvrsrvctl \
+    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvinit:/system/vendor/bin/pvrsrvinit \
+    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvctl_SGX540_120:/system/vendor/bin/pvrsrvctl_SGX540_120 \
     device/motorola/solana/prebuilt/imgtec/etc/powervr.ini:/system/etc/powervr.ini \
 
 # Wifi firmware

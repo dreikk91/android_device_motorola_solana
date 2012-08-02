@@ -914,8 +914,8 @@ service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     user media
     group media graphics
     oneshot
-service pvrsrv /system/bin/pvrsrvinit
-    class main
+service pvrsrv /system/vendor/bin/pvrsrvinit
+    class core
     user root
     oneshot
 service bugtogo /system/bin/bugtogo.sh
