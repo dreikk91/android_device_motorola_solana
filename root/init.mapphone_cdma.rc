@@ -865,13 +865,13 @@ service akmd8975 /system/bin/akmd8975
     user compass
     group compass misc input
 
-service wpa_supplicant /system/bin/strace -ff -F -tt -s 200 -o /data/trace/wpa_supp.pid /system/bin/wpa_supplicant -Dnl80211 -iwlan0
+service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
 	class main
 	socket wpa_wlan0 dgram 660 wifi wifi
 	disabled
 	oneshot
 
-service p2p_supplicant /system/bin/strace -ff -F -tt -s 200 -o /data/trace/p2p_wpa_supp.pid /system/bin/wpa_supplicant -Dnl80211 -ip2p_wlan0
+service p2p_supplicant /system/bin/wpa_supplicant -Dnl80211 -ip2p_wlan0
 	socket wpa_p2p_wlan0 dgram 660 wifi wifi
 	disabled
 	oneshot
