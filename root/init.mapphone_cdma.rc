@@ -1,9 +1,6 @@
 on early-init
-
-
-
-
-
+    # ducati logs
+    export TIMM_OSAL_DEBUG_TRACE_LEVEL 3
 
     export EXTERNAL_STORAGE /mnt/sdcard
     mkdir /mnt/sdcard 0000 system system
