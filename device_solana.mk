@@ -87,11 +87,6 @@ PRODUCT_PACKAGES += \
     tinyplay \
     parse_hdmi_edid \
 
-#    sh \
-#    alsa_amixer \
-#    alsa_aplay \
-#    alsa_ctl \
-
 PRODUCT_PACKAGES += \
     librs_jni \
     com.android.future.usb.accessory \
@@ -158,6 +153,7 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/etc/gps.conf:system/etc/gps.conf \
     device/motorola/solana/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
     device/motorola/solana/prebuilt/etc/vold.fstab:system/etc/vold.fstab \
+    device/motorola/spyder/prebuilt/etc/TICameraCameraProperties.xml:system/etc/TICameraCameraProperties.xml \
     device/motorola/solana/prebuilt/usr/idc/cpcap-key.idc:system/usr/idc/cpcap-key.idc \
     device/motorola/solana/prebuilt/usr/idc/light-prox.idc:system/usr/idc/light-prox.idc \
     device/motorola/solana/prebuilt/usr/idc/mapphone-switch.idc:system/usr/idc/mapphone-switch.idc \
@@ -175,24 +171,6 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/usr/keylayout/omap4-keypad.kl:system/usr/keylayout/omap4-keypad.kl \
     device/motorola/solana/prebuilt/usr/keylayout/qtouch-touchscreen.kl:system/usr/keylayout/qtouch-touchscreen.kl \
 
-# Graphics
-PRODUCT_COPY_FILES += \
-    device/motorola/solana/prebuilt/imgtec/lib/hw/gralloc.omap4430.so:/system/vendor/lib/hw/gralloc.omap4.so \
-    device/motorola/solana/prebuilt/imgtec/lib/egl/libEGL_POWERVR_SGX540_120.so:/system/vendor/lib/egl/libEGL_POWERVR_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/egl/libGLESv1_CM_POWERVR_SGX540_120.so:/system/vendor/lib/egl/libGLESv1_CM_POWERVR_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/egl/libGLESv2_POWERVR_SGX540_120.so:/system/vendor/lib/egl/libGLESv2_POWERVR_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libglslcompiler_SGX540_120.so:/system/vendor/lib/libglslcompiler_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libIMGegl_SGX540_120.so:/system/vendor/lib/libIMGegl_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libpvr2d_SGX540_120.so:/system/vendor/lib/libpvr2d_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libpvrANDROID_WSEGL_SGX540_120.so:/system/vendor/lib/libpvrANDROID_WSEGL_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libPVRScopeServices_SGX540_120.so:/system/vendor/lib/libPVRScopeServices_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libsrv_init_SGX540_120.so:/system/vendor/lib/libsrv_init_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libsrv_um_SGX540_120.so:/system/vendor/lib/libsrv_um_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/lib/libusc_SGX540_120.so:/system/vendor/lib/libusc_SGX540_120.so \
-    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvinit_SGX540_120:/system/vendor/bin/pvrsrvinit \
-    device/motorola/solana/prebuilt/imgtec/bin/pvrsrvctl:/system/vendor/bin/pvrsrvctl \
-    device/motorola/solana/prebuilt/imgtec/etc/powervr.ini:/system/etc/powervr.ini \
-
 # Phone settings
 PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml \
@@ -204,12 +182,6 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 # still need to set english for audio init
 PRODUCT_LOCALES += en_US
 
-
-# copy all kernel modules under the "modules" directory to system/lib/modules
-#PRODUCT_COPY_FILES += $(shell \
-#    find device/motorola/solana/modules -name '*.ko' \
-#    | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
-#    | tr '\n' ' ')
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 LOCAL_KERNEL := device/motorola/solana/kernel
@@ -223,6 +195,7 @@ PRODUCT_COPY_FILES += \
 # stuff specific to ti OMAP4 hardware
 $(call inherit-product, hardware/ti/omap4xxx/omap4.mk)
 $(call inherit-product, hardware/ti/wpan/ti-wpan-products.mk)
+$(call inherit-product-if-exists, vendor/motorola/common/proprietary/imgtec/sgx-imgtec-bins.mk)
 $(call inherit-product-if-exists, vendor/motorola/solana/solana-vendor.mk)
 $(call inherit-product-if-exists, device/ti/proprietary-open/wl12xx/wlan/wl12xx-wlan-fw-products.mk)
 
