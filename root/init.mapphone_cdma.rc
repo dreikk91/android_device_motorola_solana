@@ -1030,21 +1030,13 @@ service gadget-qbp-modem /system/bin/tty2ttyd persist.ril.modem.ttydevice /dev/t
     user radio
     group radio
     disabled
-service gadget-qbp-diag /system/bin/tty2ttyd persist.ril.diag.ttydevice /dev/ttyGS3 0 1024
-    user radio
-    group radio
-    disabled
+#service gadget-qbp-diag /system/bin/tty2ttyd persist.ril.diag.ttydevice /dev/ttyGS3 0 1024
+#    user radio
+#    group radio
+#    disabled
 on property:ro.bootmode=bp-tools
     start tcmd
-    start gadget-qbp-modem
     start gadget-qbp-diag
-    write /proc/sys/net/ipv4/ip_forward 1
-    start wrigley-diag
-    start logcatd-blan
-service JuniperVPNTools /system/bin/JuniperVPNTools
-    class main
-    user vpn
-    group vpn net_admin net_raw
 service thermal_manager /system/bin/thermaldaemon
     class main
     user system
