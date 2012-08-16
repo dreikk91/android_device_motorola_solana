@@ -149,6 +149,8 @@ PRODUCT_COPY_FILES += \
     device/motorola/solana/prebuilt/bin/battd:system/bin/battd \
     device/motorola/solana/prebuilt/bin/mount_ext3.sh:system/bin/mount_ext3.sh \
     device/motorola/solana/prebuilt/bin/strace:system/bin/strace \
+    device/motorola/solana/prebuilt/bin/yavta:system/bin/yavta \
+    device/motorola/solana/prebuilt/bin/raw2bmp:system/bin/raw2bmp \
     device/motorola/solana/prebuilt/etc/firmware/ducati-m3.512MB.bin:/system/etc/firmware/ducati-m3.512MB.bin \
     device/motorola/solana/prebuilt/etc/gps.conf:system/etc/gps.conf \
     device/motorola/solana/prebuilt/etc/media_profiles.xml:system/etc/media_profiles.xml \
