@@ -45,8 +45,6 @@ KERNEL_EXTERNAL_MODULES:
 	make -j8 -C vendor/motorola/common/proprietary/imgtec/eurasia_km/eurasiacon/build/linux2/omap4430_android ARCH=arm KERNEL_CROSS_COMPILE=arm-eabi- CROSS_COMPILE=arm-eabi- KERNELSRC=$(KERNEL_OUT)/../../../../../../kernel/motorola/solana KERNELDIR=$(KERNEL_OUT) TARGET_PRODUCT="blaze_tablet" BUILD=release TARGET_SGX=540 PLATFORM_VERSION=4.0
 	mv $(KERNEL_OUT)/../../target/kbuild/pvrsrvkm_sgx540_120.ko $(KERNEL_MODULES_OUT)
 
-#	mv $(KERNEL_OUT)/../../target/kbuild/omaplfb_sgx540_120.ko $(KERNEL_MODULES_OUT)
-
 TARGET_KERNEL_MODULES := KERNEL_EXTERNAL_MODULES
 
 
@@ -108,7 +106,7 @@ BOARD_SYSTEM_FILESYSTEM := ext3
 
 
 # Graphics
-BOARD_EGL_CFG := device/motorola/spyder/prebuilt/etc/egl.cfg
+BOARD_EGL_CFG := device/motorola/solana/prebuilt/etc/egl.cfg
 USE_OPENGL_RENDERER := true
 #COMMON_GLOBAL_CFLAGS += -DSURFACEFLINGER_FORCE_SCREEN_RELEASE
 
