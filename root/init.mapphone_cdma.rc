@@ -1,6 +1,6 @@
 on early-init
     # ducati logs
-    export TIMM_OSAL_DEBUG_TRACE_LEVEL 3
+    export TIMM_OSAL_DEBUG_TRACE_LEVEL 8
 
     export EXTERNAL_STORAGE /mnt/sdcard
     mkdir /mnt/sdcard 0000 system system
@@ -19,6 +19,7 @@ on init
 #    export EXTERNAL_ALT_STORAGE /mnt/sdcard-ext # Feature 34534
     mkdir /mnt/sdcard-ext 0000 system system # Feature 34534
     symlink /mnt/sdcard-ext /sdcard-ext # Feature 34534
+
 
     mkdir /pds 0775 system system
     mkdir /data/tmp 0777 system system
@@ -60,7 +61,6 @@ on init
 # change permission/ownership for command sys file of mdm6600 ctrl driver if present
     chown system radio /sys/class/radio/mdm6600/command
 
-
 on fs
     mount ext3 /dev/block/mmcblk1p23 /system wait noatime nodiratime barrier=1
     mount ext3 /dev/block/mmcblk1p7 /pds nosuid nodev noatime nodiratime
@@ -70,6 +70,7 @@ on fs
 on post-fs
 # Enable PVR modules
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
+    insmod /system/lib/modules/omaplfb_sgx540_120.ko
 
     chown system system /pds
     chmod 0775 /pds
@@ -328,17 +329,6 @@ on boot
     setprop ro.sys.atvc_allow_bp_log 0
     setprop ro.sys.atvc_allow_ap_mot_log 0
     setprop ro.sys.atvc_allow_simswap 0
-# OSH properties
-#    setprop sys.SystemMode RM_SM_MOBILE
-#    setprop sys.FbOwner 3
-#    setprop sys.DispOwnerLcd 3
-#    setprop sys.DispOwnerHdmi 7
-#    setprop sys.AiwFocus 3
-#    setprop sys.AMActiveTask 2
-    # display fb2 on overlay 0 for trackpad
-#    write /sys/class/graphics/fb2/overlays 3
-#    write /sys/class/graphics/fb0/overlays 2
-#    write /sys/class/graphics/fb2/overlays 0
 # Change the ownership of led files.
    chown system system /sys/class/leds/lcd-backlight/als
    chown system system /sys/class/leds/lcd-backlight/pwm_mode
@@ -639,10 +629,6 @@ on property:sys.chargeonly.mode=1
     start battd
     start whisperd
     start charge_only_mode
-
-on property:persist.service.adb.enable=1
-    start adbd
-
 # Power up to suspend
 on property:tcmd.suspend=1
     stop surfaceflinger
@@ -713,26 +699,6 @@ on property:ro.hdcp.support=2
     chown system media /dev/omap-hdcp
     chmod 0660 /dev/omap-hdcp
 # The following services are added by moto
-#service qe /xbin/qe /system
-#    class core
-#    oneshot
-# Set property strings for ATVC logging
-# This conditionally sets :
-# ro.sys.atvc_allow_bp_log
-# ro.sys.atvc_allow_gki_log
-# ro.sys.atvc_allow_ap_mot_log
-# ro.sys.atvc_allow_all_core
-# ro.sys.atvc_allow_res_core
-# ro.sys.atvc_allow_res_panic
-# ro.sys.atvc_allow_efem
-# ro.sys.atvc_allow_netmon_usb
-# ro.sys.atvc_allow_netmon_ih
-# ro.sys.atvc_allow_all_adb
-#service atvc /system/bin/dbvc_atvc_property_set
-#    class core
-#    user system
-#    group system mot_tpapi
-#    oneshot
 service battd /system/bin/battd
     class core
     socket battdsock stream 0666 mot_accy mot_accy
@@ -756,21 +722,14 @@ service msp430 /system/bin/msp430 boot
     user compass
     group compass misc input
     oneshot
-#service ispupgrade /system/bin/ispupgrade flash_all
-#     class core
-#     user media
-#     group mot_pwric camera
-#     oneshot
 service uim /system/bin/uim-sysfs
     class core
     user root
     group bluetooth net_bt_admin
-
 service initial_regdom /system/bin/initial_regdom.sh
     class main
     disabled
     oneshot
-
 service hciattach /system/bin/hciattach -l
     class main
     user bluetooth
@@ -855,7 +814,6 @@ on property:tcmd.bt_mod=0
 #execute tcmdhelp
 on property:tcmd.start_tcmdhelp=1
     start tcmdhelp
-
 # Ecompass daemon
 service akmd8975 /system/bin/akmd8975
     class main
@@ -921,37 +879,31 @@ service pvrsrv /system/vendor/bin/pvrsrvinit
     class core
     user root
     oneshot
-
 service bugtogo /system/bin/bugtogo.sh
     class main
     disabled
     user root
     oneshot
     keycodes 114 115
-
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
     class main
     user root
     disabled
     oneshot
-
 service smc /system/bin/startup_smc.sh
     class core
     user mot_tpapi
     group mot_tpapi
     disabled
     oneshot
-
 service pm_init /system/bin/sh /system/usr/bin/pm_init.sh
     class main
     oneshot
-
 service modemlog /system/bin/modemlog
     class core
     user system
     group system log
     oneshot
-
 # aplogd start/stop is controlled by the persist.log.aplogd.enable system
 # property. Don't set the property directly, because it's controlled by the
 # com.motorola.android.settings.aplogd Java Service and ContentProvider. To
@@ -966,43 +918,28 @@ service aplogd /system/bin/aplogd
     # to log plus those groups after preserving CAP_SYS_ADMIN, which is required
     # for kernel logging.
     disabled
-
 service fmradio /system/bin/fmradioserver
     class main
     user system
     group bluetooth net_bt_admin net_raw net_admin misc
     disabled
-
 service ftmipcd /system/bin/ftmipcd
     class main
     user radio
     group radio inet
-
 service qbplogd /system/bin/qbplogd
     class main
     user radio
     group sdcard_rw radio inet
     oneshot
     disabled
-
 service dund_dialup /system/bin/dund --listen --channel=6 --nodetach --dialup
     class main
     group net_bt net_bt_admin
     disabled
     oneshot
-
 on property:dev.bootcomplete=1
 #    start loadpreinstalls
-#service cdromversion /system/bin/logwrapper /system/bin/mount_cdrom.sh /dev/block/cdrom
-#    class core
-#    oneshot
-# Backup/Restore Feature
-on property:mot.backup_restore.status="Finished"
-    start zygote
-service mot_backup /system/bin/logwrapper /system/xbin/run_backup /system/etc/backup_targets.csv
-    disabled
-    user root
-    oneshot
 service secclkd /system/bin/secclkd
     class main
     socket secclk_socket stream 660 mot_secclkd mot_secclkd
@@ -1020,12 +957,6 @@ on property:persist.factory.allow_adb=1
     write /sys/class/android_usb/android0/pc_command_adb "adb"
 on property:persist.factory.allow_adb=0
     write /sys/class/android_usb/android0/pc_command_adb " "
-#start Authentec VPN service
-#service vpnclientpm /system/bin/vpnclientpm
-#    class main
-#    user root
-#    oneshot
-#    user root
 service gadget-qbp-modem /system/bin/tty2ttyd persist.ril.modem.ttydevice /dev/ttyGS2 0 1024
     user radio
     group radio

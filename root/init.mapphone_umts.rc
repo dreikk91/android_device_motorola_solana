@@ -30,7 +30,8 @@ on fs
 
 on post-fs-data
 # Enable PVR modules
-    insmod /pvrsrvkm_sgx540_120.ko
+    insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
+    insmod /system/lib/modules/omaplfb_sgx540_120.ko
 
 # Backward compatibility
     symlink /dev /dev/netmux
