@@ -32,7 +32,7 @@ PRODUCT_COPY_FILES += \
 # Hardware HALs
 PRODUCT_PACKAGES += \
     camera.omap4 \
-    libinvensense_mpl \
+    libinvensense_mpl
 
 PRODUCT_PACKAGES += \
     libaudioutils \
@@ -83,19 +83,13 @@ PRODUCT_PACKAGES += \
     camera_test \
     Superuser \
     su \
-    DockAudio \
+    DockAudio
 
 PRODUCT_PACKAGES += \
-    librs_jni \
     com.android.future.usb.accessory \
     FileManager \
     MusicFX \
-    Apollo \
-
-# WirelessTether
-PRODUCT_PACKAGES += wifi_tether_v3_2-beta1
-PRODUCT_COPY_FILES += \
-    $(DEVICE_FOLDER)/prebuilt/lib/libwtnativetask.so:system/lib/libwtnativetask.so \
+    Apollo
 
 # Rootfs files
 PRODUCT_COPY_FILES += \
@@ -105,7 +99,7 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/root/init.mapphone_umts.rc:/root/init.mapphone_umts.rc \
     $(DEVICE_FOLDER)/root/ueventd.rc:/root/ueventd.rc \
     $(DEVICE_FOLDER)/root/ueventd.mapphone_cdma.rc:/root/ueventd.mapphone_cdma.rc \
-    $(DEVICE_FOLDER)/root/ueventd.mapphone_umts.rc:/root/ueventd.mapphone_umts.rc \
+    $(DEVICE_FOLDER)/root/ueventd.mapphone_umts.rc:/root/ueventd.mapphone_umts.rc
 
 # Kexec files
 PRODUCT_COPY_FILES += \
@@ -119,7 +113,7 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/kexec/procfs_rw.ko:system/etc/kexec/procfs_rw.ko \
     $(DEVICE_FOLDER)/kexec/uart.ko:system/etc/kexec/uart.ko \
     out/target/product/solana/ramdisk.img:system/etc/kexec/ramdisk.gz \
-    out/target/product/solana/kernel:system/etc/kexec/zImage \
+    out/target/product/solana/kernel:system/etc/kexec/zImage
 
 # Permissions files
 PRODUCT_COPY_FILES += \
@@ -139,7 +133,7 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.wifi.direct.xml:/system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/base/data/etc/handheld_core_hardware.xml:/system/etc/permissions/handheld_core_hardware.xml \
     frameworks/base/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
-    frameworks/base/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/base/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml
 
 
 # Prebuilts
@@ -169,12 +163,12 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/prebuilt/usr/keylayout/light-prox.kl:system/usr/keylayout/light-prox.kl \
     $(DEVICE_FOLDER)/prebuilt/usr/keylayout/mapphone-switch.kl:system/usr/keylayout/mapphone-switch.kl \
     $(DEVICE_FOLDER)/prebuilt/usr/keylayout/omap4-keypad.kl:system/usr/keylayout/omap4-keypad.kl \
-    $(DEVICE_FOLDER)/prebuilt/usr/keylayout/qtouch-touchscreen.kl:system/usr/keylayout/qtouch-touchscreen.kl \
+    $(DEVICE_FOLDER)/prebuilt/usr/keylayout/qtouch-touchscreen.kl:system/usr/keylayout/qtouch-touchscreen.kl
 
 # Phone settings
 PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml \
-    vendor/cm/prebuilt/common/etc/spn-conf.xml:system/etc/spn-conf.xml \
+    vendor/cm/prebuilt/common/etc/spn-conf.xml:system/etc/spn-conf.xml
 
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
