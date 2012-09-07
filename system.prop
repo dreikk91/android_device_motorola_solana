@@ -96,7 +96,6 @@ persist.mot.usb.mediasync = 1
 # persist.usb.android_config = 1
 
 # System property for SMC
-#ro.service.start.smc=1
 ro.service.start.smc=0
 ro.HorizontalBUA=true
 #Proximity sensor debounce time
@@ -266,7 +265,7 @@ lte_ril.netcfg_to=90
 ro.mot.tmp.telephony.refactor=true
 ro.cdma.subscription=0
 ro.mot.internalsdcard=1
-ro.com.google.gmsversion=2.3_r6
+ro.com.google.gmsversion=4.0_r2
 ro.telephony.call_ring.multiple=false
 ro.telephony.call_ring.delay=3000
 ro.setupwizard.enable_bypass=1
