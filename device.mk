@@ -5,7 +5,7 @@
 DEVICE_FOLDER := device/motorola/solana
 
 # Device overlay
-DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay
+DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay/aosp
 
 # Audio
 PRODUCT_COPY_FILES += \
