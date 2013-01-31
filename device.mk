@@ -106,9 +106,6 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/root/ueventd.mapphone.rc:/root/ueventd.mapphone_umts.rc
 
 # Kexec files
-ifeq ($(TARGET_PRODUCT),full_solana)
-PRODUCT_COPY_FILES += $(DEVICE_FOLDER)/prebuilt/etc/rootfs/init:root/init
-endif
 PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/kexec/arm_kexec.ko:system/etc/kexec/arm_kexec.ko \
     $(DEVICE_FOLDER)/kexec/devtree:system/etc/kexec/devtree \
