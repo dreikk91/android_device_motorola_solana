@@ -48,6 +48,10 @@ TARGET_KRAIT_BIONIC_PLDSIZE := 64
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.4.3
 #TARGET_PROVIDES_INIT_RC := true
 
+# Kernel Build
+TARGET_KERNEL_SOURCE := kernel/motorola/omap4-common-kexec
+TARGET_KERNEL_CONFIG := mapphone_solana_jb_defconfig
+
 WLAN_MODULES:
 	make clean -C hardware/ti/wlan/mac80211/compat_wl12xx
 	make -j8 -C hardware/ti/wlan/mac80211/compat_wl12xx KERNEL_DIR=$(KERNEL_OUT) KLIB=$(KERNEL_OUT) KLIB_BUILD=$(KERNEL_OUT) ARCH=arm CROSS_COMPILE="arm-eabi-"
@@ -105,7 +109,7 @@ ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=1
 
 # Recovery
 BOARD_HAS_LOCKED_BOOTLOADER := true
-TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/omap4-common/recovery-kernel
+TARGET_PREBUILT_RECOVERY_KERNEL := device/motorola/solana/recovery-kernel
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_UMS_LUNFILE := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 BOARD_ALWAYS_INSECURE := true
@@ -117,7 +121,7 @@ TARGET_RECOVERY_PRE_COMMAND_CLEAR_REASON := true
 TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
 
 # Graphics
-BOARD_EGL_CFG := device/motorola/omap4-common/prebuilt/etc/egl.cfg
+BOARD_EGL_CFG := device/motorola/solana/prebuilt/etc/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_USE_CUSTOM_LIBION := true
 
@@ -158,17 +162,13 @@ TARGET_NR_SVC_SUPP_GIDS := 28
 
 
 # MOTOROLA
+BOARD_USE_MOTOROLA_DEV_ALIAS := true
+ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+COMMON_GLOBAL_CFLAGS += -DBOARD_USE_MOTOROLA_DEV_ALIAS
+endif
 USE_MOTOROLA_CODE := true
 ifdef USE_MOTOROLA_CODE
 COMMON_GLOBAL_CFLAGS += -DUSE_MOTOROLA_CODE
-endif
-USE_MOTOROLA_USERS := true
-ifdef USE_MOTOROLA_USERS
-COMMON_GLOBAL_CFLAGS += -DUSE_MOTOROLA_USERS
-endif
-USE_MOTOROLA_UIDS := true
-ifdef USE_MOTOROLA_UIDS
-COMMON_GLOBAL_CFLAGS += -DMOTOROLA_UIDS
 endif
 
 # Media / Radio
@@ -201,10 +201,6 @@ TARGET_BOOTLOADER_BOARD_NAME := solana
 BOARD_KERNEL_CMDLINE := root=/dev/ram0 rw mem=512M@0x80000000 console=ttyO2,115200n8 init=/init ip=off brdrev=P2A ramdisk_size=20480 mmcparts=mmcblk1:p7(pds),p15(boot),p16(recovery),p17(cdrom),p18(misc),p19(cid),p20(kpanic),p21(system),p22(cache),p23(preinstall),p24(userdata),p25(emstorage) androidboot.bootloader=0x0A64
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_PAGE_SIZE := 0x4096
-
-# Kernel Build
-TARGET_KERNEL_SOURCE := kernel/motorola/mapphone
-TARGET_KERNEL_CONFIG := mapphone_solana_jb_defconfig
 
 # Misc.
 BOARD_USES_KEYBOARD_HACK := true
