@@ -3,7 +3,9 @@
 #
 
 DEVICE_FOLDER := device/motorola/solana
+ifeq ($(TARGET_DEVICE),solana)
 BOARD_USES_KEXEC := true
+endif
 
 # Device overlay
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay/aosp
