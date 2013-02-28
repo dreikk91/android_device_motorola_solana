@@ -51,7 +51,7 @@ TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.4.3
 
 # Kernel Build
 TARGET_KERNEL_SOURCE := kernel/motorola/omap4-kexec-common
-TARGET_KERNEL_CONFIG := mapphone_solana_jb_defconfig
+TARGET_KERNEL_CONFIG := mapphone_solana_phablet_defconfig
 
 WLAN_MODULES:
 	make clean -C hardware/ti/wlan/mac80211/compat_wl12xx
