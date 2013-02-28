@@ -192,6 +192,10 @@ PRODUCT_COPY_FILES += \
     $(DEVICE_FOLDER)/prebuilt/usr/keylayout/omap4-keypad.kl:system/usr/keylayout/omap4-keypad.kl \
     $(DEVICE_FOLDER)/prebuilt/usr/keylayout/qtouch-touchscreen.kl:system/usr/keylayout/qtouch-touchscreen.kl
 
+# Fix ubuntu-session file for lower PPI/GRID_UNIT
+PRODUCT_COPY_FILES += \
+    $(DEVICE_FOLDER)/ubuntu-session:system/etc/ubuntu-session
+
 # sw vsync setting
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.hwc.sw_vsync=1
