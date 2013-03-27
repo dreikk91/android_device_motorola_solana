@@ -187,8 +187,7 @@ PRODUCT_COPY_FILES += \
 
 # Add ubuntu conf
 PRODUCT_COPY_FILES += \
-    $(DEVICE_FOLDER)/solana.conf:system/etc/ubuntu-session.d/solana.conf
-
+    $(DEVICE_FOLDER)/cdma_solana.conf:system/etc/ubuntu-session.d/cdma_solana.conf
 # sw vsync setting
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.hwc.sw_vsync=1
