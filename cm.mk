@@ -2,12 +2,19 @@
 $(call inherit-product, device/motorola/solana/full_solana.mk)
 
 # Inherit some common CM stuff.
+$(call inherit-product, vendor/cm/config/cdma.mk)
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit some common CM stuff.
 #$(call inherit-product, vendor/cm/config/gsm.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/motorola/solana/overlay/cm
+
+# CM-specific init file for SafeStrap
+ifneq ($(BOARD_USES_KEXEC),true)
+PRODUCT_COPY_FILES += \
+    vendor/cm/prebuilt/common/etc/init.local.rc:system/etc/rootfs/init.cm.rc
+endif
 
 #
 # Setup device specific product configuration.
