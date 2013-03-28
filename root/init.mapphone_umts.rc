@@ -1,3 +1,5 @@
+import /init.safestrap-${ro.boot.safestrap.romslot}.rc
+
 on init
     loglevel 8
 

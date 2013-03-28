@@ -1,3 +1,5 @@
+import /init.safestrap-${ro.boot.safestrap.romslot}.rc
+
 on init
     loglevel 8
 
@@ -35,15 +37,11 @@ on init
 
 
 on fs
-# begin SS3 setup
-    mount rootfs rootfs / rw remount
-    mkdir /ss 0777 root root
-    mount vfat /dev/block/emstorage /ss
-# end SS3 setup
-    mount ext3 loop@/ss/safestrap/rom-slot1/system.img /system wait noatime nodiratime barrier=1
-    mount ext3 /dev/block/pds /pds nosuid nodev noatime nodiratime
-    mount ext3 loop@/ss/safestrap/rom-slot1/userdata.img /data nosuid nodev noatime nodiratime
-    mount ext3 loop@/ss/safestrap/rom-slot1/cache.img /cache nosuid nodev noatime nodiratime
+#   now handled in init.safestrap-*.rc
+#   mount ext3 /dev/block/system /system wait discard noatime nodiratime barrier=1
+#   mount ext3 /dev/block/userdata /data discard nosuid nodev noatime nodiratime
+#   mount ext3 /dev/block/cache /cache discard nosuid nodev noatime nodiratime
+
 on post-fs
 # Enable PVR modules
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
@@ -257,7 +255,7 @@ on early-boot
 # Loading SMC kernel module first. Because load kernel module need root,
 # so do not put this command into startup_smc.sh which only run as MOT_TPAPI
     exec /system/bin/enc_mgt_tool --insmod
-    start smc
+#    start smc
 # mount eCryptFS if required
     exec /system/bin/enc_mgt_tool
     class_start media_early_init
