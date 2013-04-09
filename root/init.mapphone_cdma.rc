@@ -41,6 +41,7 @@ on fs
 #   mount ext3 /dev/block/system /system wait discard noatime nodiratime barrier=1
 #   mount ext3 /dev/block/userdata /data discard nosuid nodev noatime nodiratime
 #   mount ext3 /dev/block/cache /cache discard nosuid nodev noatime nodiratime
+    mount ext3 /dev/block/pds /pds nosuid nodev noatime nodiratime
 
 on post-fs
 # Enable PVR modules
