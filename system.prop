@@ -200,3 +200,7 @@ ro.mot.hidden_keyboards=evfwd
 
 # Additions
 sys.mem.max_hidden_apps=3
+
+# Vold switchability uncomment second line to swap 	185
+ro.vold.switchablepair=/storage/sdcard0,/storage/sdcard1	186
+#persist.sys.vold.switchexternal=1 
