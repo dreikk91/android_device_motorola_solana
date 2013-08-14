@@ -547,12 +547,12 @@ service charge_only_mode /system/bin/charge_only_mode
     user root
     group graphics system input
     disabled
-service whisperd /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/whisperd.pid /system/bin/whisperd /dev/ttyO1
+service whisperd /system/bin/whisperd /dev/ttyO1
     class core
     user mot_whisper
     group mot_whisper mot_pwric
     oneshot
-service uim /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/uim.pid /system/bin/uim-sysfs
+service uim /system/bin/uim-sysfs
     class core
     user root
     group bluetooth net_bt_admin
@@ -613,7 +613,7 @@ service pvrsrv /system/vendor/bin/pvrsrvinit
     group root
     seclabel u:r:pvrsrvinit:s0
     oneshot
-service pppd-ril /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/pppd-ril.pid /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
+service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
     class main
     user root
     disabled
@@ -624,7 +624,7 @@ service smc /system/bin/startup_smc.sh
     group mot_tpapi
     disabled
     oneshot
-service modemlog /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/modemlog.pid /system/bin/modemlog
+service modemlog /system/bin/modemlog
     class core
     user system
     group system log
@@ -685,7 +685,7 @@ service wifical_check /system/bin/sh /system/bin/wificalcheck.sh
     oneshot
 
 # Wifi calibrate
-service wifi_calibrator /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/wifi.pid /system/bin/sh /system/bin/wifical.sh
+service wifi_calibrator /system/bin/sh /system/bin/wifical.sh
     disabled
     class late_start
     user root
