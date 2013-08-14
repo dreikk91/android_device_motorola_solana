@@ -43,3 +43,5 @@ BOARD_PAGE_SIZE := 0x4096
 # Kernel Build
 TARGET_KERNEL_VARIANT_CONFIG := mapphone_solana_defconfig 
 
+# RIL
+BOARD_USES_LEGACY_RIL := true
