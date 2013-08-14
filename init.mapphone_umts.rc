@@ -1,10 +1,9 @@
-import /init.safestrap-${ro.boot.safestrap.romslot}.rc
-
 on init
+
     loglevel 8
 
-    export EXTERNAL_STORAGE /storage/sdcard1
-    export SECONDARY_STORAGE /storage/sdcard0
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
 
     mkdir /storage/sdcard0 0000 system system
     mkdir /storage/sdcard1 0000 system system
@@ -22,24 +21,21 @@ on init
     mkdir /preinstall 0771 system system
     mkdir /cdrom 0770 system system
 
-    symlink /data/tmp /tmp
-
+# Permissions for RIL. Need to be set before boot.
     chmod 0660 /sys/bus/usb/devices/usb1/power/control
     chmod 0660 /sys/bus/usb/devices/usb2/power/control
     chown system radio /sys/bus/usb/devices/usb1/power/control
     chown system radio /sys/bus/usb/devices/usb2/power/control
-
-
-# change permission/ownership for command sys file of mdm6600 ctrl driver if present
     chown system radio /sys/class/radio/mdm6600/command
 
 on fs
-#   now handled in init.safestrap-*.rc
-#   mount ext3 /dev/block/system /system wait discard noatime nodiratime barrier=1
-#   mount ext3 /dev/block/userdata /data discard nosuid nodev noatime nodiratime
-#   mount ext3 /dev/block/cache /cache discard nosuid nodev noatime nodiratime
-    mount ext3 /dev/block/pds /pds nosuid nodev noatime nodiratime
+    exec /sbin/fixboot.sh
+    mount_all /fstab.mapphone_cdma
+
 on post-fs
+    exec /system/bin/pdsbackup.sh
+    # Load FIPS kernel module
+    exec /system/bin/fips_loader /system/lib/modules
 # Enable PVR modules
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
     insmod /system/lib/modules/omaplfb_sgx540_120.ko
@@ -56,9 +52,10 @@ on post-fs
     symlink /dev /dev/netmux
     symlink /dev/ttyGS0 /dev/acm0
 
-# Create mountpoints and mount tmpfs
+    # Create mountpoints and mount tmpfs
     mkdir /misc 0770 system misc
     mkdir /sd-ext 0771 system system
+    symlink /data/tmp /tmp
     mount tmpfs tmpfs /tmp
 
     # Same reason as /data above
@@ -90,11 +87,6 @@ on post-fs
     write /sys/class/rtc/rtc0/unsecured_rtc on
     # Disable a system-wide task dump on OOM in default
     write /proc/sys/vm/oom_dump_tasks 0
-    write /proc/sys/fs/suid_dumpable 2
-    # Set core pattern
-    write /proc/sys/kernel/core_pattern "|/system/bin/coredump %e %p %t"
-    # Set core filter
-    write /proc/self/coredump_filter "0x7f"
     # Power Management
     write /sys/devices/w1\ bus\ master/w1_master_search 2
     write /sys/devices/system/cpu/cpu0/cpuidle/enable_state 1
@@ -125,6 +117,8 @@ on post-fs
     mkdir /pds/factory 0740 mot_tcmd shell
     mkdir /pds/camera 0775 system media
     mkdir /pds/camera/module1 0775 system media
+    chown system media /pds/camera/module1/cameracal.bin
+    chmod 0644 /pds/camera/module1/cameracal.bin
 # Create basic filesystem structure
     mkdir /pds/wifi 0771 wifi wifi
     chmod 0664 /pds/wifi/nvs_map.bin
@@ -134,6 +128,8 @@ on post-fs
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chmod 0660 /sys/class/rfkill/rfkill0/state
+    restorecon /sys/class/rfkill/rfkill0/state
+    restorecon /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt_stack /dev/ttyO1
     chmod 0660 /dev/ttyO1
     # following dir is for storing BP Flex and PDS files. NVM Daemon is using this
@@ -151,6 +147,7 @@ on post-fs
 # Permission for USB
     chown root mot_usb /proc/mtpctl
     chmod 0660 /proc/mtpctl
+    restorecon /system/etc/firmware/ducati-m3.512MB.bin
 # Install kernel modules
 # Install BP related kernel modules
     #Start the engine modules for netmux first for other daemons depends on it
@@ -159,12 +156,8 @@ on post-fs
     insmod /system/lib/modules/modem_pm_driver.ko
 # Install product specific kernel modules
     exec /system/bin/load_modules.sh
-# chown/chmod for FOTA
-    chown system system /cache/fota
-    chmod 0770 /cache/fota
-    setprop wifi.interface "wlan0"
-    setprop softap.interface "wlan0"
 # Load BT userspace driver
+    insmod /system/lib/modules/btwilink.ko
     insmod /system/lib/modules/tty_hci.ko
 # Load wifi drivers (all except wl12xx_sdio)
     insmod /system/lib/modules/compat.ko
@@ -176,20 +169,12 @@ on post-fs
     exec /system/bin/motobox swapon /dev/block/zram0
 on post-fs-data
     mkdir /data/tmp 0777 system system
-    copy /proc/apanic_app_threads /data/dontpanic/apanic_app_threads
-    chown root log /data/dontpanic/apanic_app_threads
-    chmod 0660 /data/dontpanic/apanic_app_threads
-# To remove apanic proc entry
-    write /proc/apanic_console 1
     chown system system /mnt/sdcard # Feature 34534
     chmod 0777 /mnt/sdcard # Feature 34534
 #Set the default value for bluedroid_ref
     write /data/tmp/bluedroid_ref 0
     chown system system /data/tmp/bluedroid_ref
     chmod 0660 /data/tmp/bluedroid_ref
-    # create moto specific dirs for mystuff
-    mkdir /data/download 0775 system system
-    mkdir /data/download/mystuff 0775 system system
     # fix cache for market access
     chmod 775 /cache
     mkdir /cache/download 0775 system system
@@ -253,15 +238,15 @@ on early-boot
 # space on sholes. These numbers are in pages (4k). Must be kept
 # in sync with init.rc. This must be done before the regular init.rc
 # since these properies can't change once set.
-    setprop ro.FOREGROUND_APP_MEM 2464
-    setprop ro.VISIBLE_APP_MEM 3712
-    setprop ro.PERCEPTIBLE_APP_MEM 5632
-    setprop ro.HEAVY_WEIGHT_APP_MEM 5632
-    setprop ro.SECONDARY_SERVER_MEM 7392
-    setprop ro.BACKUP_APP_MEM 7392
-    setprop ro.HOME_APP_MEM 7392
-    setprop ro.HIDDEN_APP_MEM 10752
-    setprop ro.EMPTY_APP_MEM 14336
+    setprop ro.FOREGROUND_APP_MEM 2048
+    setprop ro.VISIBLE_APP_MEM 3072
+    setprop ro.PERCEPTIBLE_APP_MEM 4096
+    setprop ro.HEAVY_WEIGHT_APP_MEM 4096
+    setprop ro.SECONDARY_SERVER_MEM 6144
+    setprop ro.BACKUP_APP_MEM 6144
+    setprop ro.HOME_APP_MEM 6144
+    setprop ro.HIDDEN_APP_MEM 7168
+    setprop ro.EMPTY_APP_MEM 8192
 # Define the BLAN interface
     setprop ro.blan.interface usb0
 # Launch SMC script and allow it to read cmdline option
@@ -269,7 +254,7 @@ on early-boot
 # Loading SMC kernel module first. Because load kernel module need root,
 # so do not put this command into startup_smc.sh which only run as MOT_TPAPI
     exec /system/bin/enc_mgt_tool --insmod
-    start smc
+#    start smc
 # mount eCryptFS if required
     exec /system/bin/enc_mgt_tool
     class_start media_early_init
@@ -483,9 +468,14 @@ on boot
     setprop net.tcp.buffersize.default 131072,262144,524288,4096,16384,131072
     setprop net.tcp.buffersize.wifi 131072,262144,524288,4096,16384,131072
     setprop net.tcp.buffersize.umts 131072,262144,524288,4096,16384,131072
+    setprop net.tcp.buffersize.hspa 131072,262144,524288,4096,16384,147456
     setprop net.tcp.buffersize.edge 16384,32768,65536,4096,16384,32768
     setprop net.tcp.buffersize.gprs 4096,8192,12288,4096,8192,12288
+    setprop net.tcp.buffersize.cdma 4096,12288,24576,4096,12288,24576
+    setprop net.tcp.buffersize.evdo 16384,32768,65536,4096,16384,51200
     setprop net.tcp.buffersize.lte 524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.2ghotspot 4096,12288,24576,4096,12288,24576
+    setprop net.tcp.buffersize.3ghotspot 4096,16384,51200,16384,32768,65536
     setprop net.tcp.buffersize.4ghotspot 262144,524288,1048576,524288,1048576,2097152
 # Network Bandwidth control for netd
     setprop persist.bandwidth.enable 1
@@ -497,6 +487,7 @@ on boot
 
 # Start services
     exec /system/bin/mot_boot_mode
+    start wifical_check
 # Set core max size (2G)
     setrlimit 4 2147483648 2147483648
     mount debugfs /sys/kernel/debug /sys/kernel/debug
@@ -513,6 +504,7 @@ on charger
     trigger post-fs
     trigger post-fs-data
     trigger start-charging
+
 on start-charging
     chown system system /sys/power/state
     chmod 0660 /sys/power/state
@@ -539,17 +531,10 @@ on property:sys.chargeonly.mode=1
     start whisperd
     start charge_only_mode
 # Power up to suspend
+
 service dnsmasq /system/bin/logwrapper /system/bin/dnsmasq -C/data/misc/wifi/dns.conf -k
     class main
     group wifi
-    disabled
-    oneshot
-service mynet_start /system/bin/logwrapper /system/bin/sh /data/misc/wifi/forward_start.sh
-    class main
-    disabled
-    oneshot
-service mynet_stop /system/bin/logwrapper /system/bin/sh /data/misc/wifi/forward_stop.sh
-    class main
     disabled
     oneshot
 # aplogd on at boot in emulator
@@ -612,7 +597,6 @@ service uim /system/bin/uim-sysfs
     class core
     user root
     group bluetooth net_bt_admin
-    oneshot
 service hciattach /system/bin/hciattach -l
     class main
     user bluetooth
@@ -699,7 +683,11 @@ service iprenew_p2p /system/bin/dhcpcd -n
     class main
     disabled
     oneshot
-service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
+service iprenew_bt-pan /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
@@ -716,13 +704,8 @@ service pvrsrv /system/vendor/bin/pvrsrvinit
     class core
     user root
     group root
+    seclabel u:r:pvrsrvinit:s0
     oneshot
-service bugtogo /system/bin/bugtogo.sh
-    class main
-    disabled
-    user root
-    oneshot
-    keycodes 114 115
 service smc /system/bin/startup_smc.sh
     class core
     user mot_tpapi

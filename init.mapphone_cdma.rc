@@ -1,10 +1,9 @@
-import /init.safestrap-${ro.boot.safestrap.romslot}.rc
-
 on init
+
     loglevel 8
 
-    export EXTERNAL_STORAGE /storage/sdcard1
-    export SECONDARY_STORAGE /storage/sdcard0
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
 
     mkdir /storage/sdcard0 0000 system system
     mkdir /storage/sdcard1 0000 system system
@@ -23,27 +22,20 @@ on init
     mkdir /cdrom 0770 system system
 
 # Permissions for RIL. Need to be set before boot.
-
-
-
     chmod 0660 /sys/bus/usb/devices/usb1/power/control
     chmod 0660 /sys/bus/usb/devices/usb2/power/control
     chown system radio /sys/bus/usb/devices/usb1/power/control
     chown system radio /sys/bus/usb/devices/usb2/power/control
-
-
-# change permission/ownership for command sys file of mdm6600 ctrl driver if present
     chown system radio /sys/class/radio/mdm6600/command
 
-
 on fs
-#   now handled in init.safestrap-*.rc
-#   mount ext3 /dev/block/system /system wait discard noatime nodiratime barrier=1
-#   mount ext3 /dev/block/userdata /data discard nosuid nodev noatime nodiratime
-#   mount ext3 /dev/block/cache /cache discard nosuid nodev noatime nodiratime
-    mount ext3 /dev/block/pds /pds nosuid nodev noatime nodiratime
+    exec /sbin/fixboot.sh
+    mount_all /fstab.mapphone_cdma
 
 on post-fs
+    exec /system/bin/pdsbackup.sh
+    # Load FIPS kernel module
+    exec /system/bin/fips_loader /system/lib/modules
 # Enable PVR modules
     insmod /system/lib/modules/pvrsrvkm_sgx540_120.ko
     insmod /system/lib/modules/omaplfb_sgx540_120.ko
@@ -90,11 +82,6 @@ on post-fs
     write /sys/class/rtc/rtc0/unsecured_rtc on
     # Disable a system-wide task dump on OOM in default
     write /proc/sys/vm/oom_dump_tasks 0
-    write /proc/sys/fs/suid_dumpable 2
-    # Set core pattern
-    write /proc/sys/kernel/core_pattern "|/system/bin/coredump %e %p %t"
-    # Set core filter
-    write /proc/self/coredump_filter "0x7f"
     # Power Management
     write /sys/devices/w1\ bus\ master/w1_master_search 2
     write /sys/devices/system/cpu/cpu0/cpuidle/enable_state 1
@@ -124,6 +111,8 @@ on post-fs
     mkdir /pds/factory 0740 mot_tcmd shell
     mkdir /pds/camera 0775 system media
     mkdir /pds/camera/module1 0775 system media
+    chown system media /pds/camera/module1/cameracal.bin
+    chmod 0644 /pds/camera/module1/cameracal.bin
 # Create basic filesystem structure
     mkdir /pds/wifi 0771 wifi wifi
     chmod 0664 /pds/wifi/nvs_map.bin
@@ -133,6 +122,8 @@ on post-fs
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chmod 0660 /sys/class/rfkill/rfkill0/state
+    restorecon /sys/class/rfkill/rfkill0/state
+    restorecon /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt_stack /dev/ttyO1
     chmod 0660 /dev/ttyO1
     # create the lost+found directories, so as to enforce our permissions
@@ -148,15 +139,12 @@ on post-fs
 # Permission for USB
     chown root mot_usb /proc/mtpctl
     chmod 0660 /proc/mtpctl
+    restorecon /system/etc/firmware/ducati-m3.512MB.bin
 # Install kernel modules
 # Install product specific kernel modules
     exec /system/bin/load_modules.sh
-# chown/chmod for FOTA
-    chown system system /cache/fota
-    chmod 0770 /cache/fota
-    setprop wifi.interface "wlan0"
-    setprop softap.interface "wlan0"
 # Load BT userspace driver
+    insmod /system/lib/modules/btwilink.ko
     insmod /system/lib/modules/tty_hci.ko
 # Load wifi drivers (all except wl12xx_sdio)
     insmod /system/lib/modules/compat.ko
@@ -168,20 +156,12 @@ on post-fs
     exec /system/bin/motobox swapon /dev/block/zram0
 on post-fs-data
     mkdir /data/tmp 0777 system system
-    copy /proc/apanic_app_threads /data/dontpanic/apanic_app_threads
-    chown root log /data/dontpanic/apanic_app_threads
-    chmod 0660 /data/dontpanic/apanic_app_threads
-# To remove apanic proc entry
-    write /proc/apanic_console 1
     chown system system /mnt/sdcard # Feature 34534
     chmod 0777 /mnt/sdcard # Feature 34534
 #Set the default value for bluedroid_ref
     write /data/tmp/bluedroid_ref 0
     chown system system /data/tmp/bluedroid_ref
     chmod 0660 /data/tmp/bluedroid_ref
-    # create moto specific dirs for mystuff
-    mkdir /data/download 0775 system system
-    mkdir /data/download/mystuff 0775 system system
     # fix cache for market access
     chmod 775 /cache
     mkdir /cache/download 0775 system system
@@ -469,20 +449,26 @@ on boot
     setprop net.tcp.buffersize.default 131072,262144,524288,4096,16384,131072
     setprop net.tcp.buffersize.wifi 131072,262144,524288,4096,16384,131072
     setprop net.tcp.buffersize.umts 131072,262144,524288,4096,16384,131072
+    setprop net.tcp.buffersize.hspa 131072,262144,524288,4096,16384,147456
     setprop net.tcp.buffersize.edge 16384,32768,65536,4096,16384,32768
     setprop net.tcp.buffersize.gprs 4096,8192,12288,4096,8192,12288
+    setprop net.tcp.buffersize.cdma 4096,12288,24576,4096,12288,24576
+    setprop net.tcp.buffersize.evdo 16384,32768,65536,4096,16384,51200
     setprop net.tcp.buffersize.lte 524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.2ghotspot 4096,12288,24576,4096,12288,24576
+    setprop net.tcp.buffersize.3ghotspot 4096,16384,51200,16384,32768,65536
     setprop net.tcp.buffersize.4ghotspot 262144,524288,1048576,524288,1048576,2097152
 # Network Bandwidth control for netd
     setprop persist.bandwidth.enable 1
 
 # Setup trace files
-    mkdir /data/trace 0777 root root
-    chown root root /data/trace
-    chmod 0777 /data/trace
+    mkdir /cache/trace 0777 root root
+    chown root root /cache/trace
+    chmod 0777 /cache/trace
 
 # Start services
     exec /system/bin/mot_boot_mode
+    start wifical_check
 # Set core max size (2G)
     setrlimit 4 2147483648 2147483648
     mount debugfs /sys/kernel/debug /sys/kernel/debug
@@ -499,6 +485,7 @@ on charger
     trigger post-fs
     trigger post-fs-data
     trigger start-charging
+
 on start-charging
     chown system system /sys/power/state
     chmod 0660 /sys/power/state
@@ -525,17 +512,10 @@ on property:sys.chargeonly.mode=1
     start whisperd
     start charge_only_mode
 # Power up to suspend
+
 service dnsmasq /system/bin/logwrapper /system/bin/dnsmasq -C/data/misc/wifi/dns.conf -k
     class main
     group wifi
-    disabled
-    oneshot
-service mynet_start /system/bin/logwrapper /system/bin/sh /data/misc/wifi/forward_start.sh
-    class main
-    disabled
-    oneshot
-service mynet_stop /system/bin/logwrapper /system/bin/sh /data/misc/wifi/forward_stop.sh
-    class main
     disabled
     oneshot
 # aplogd on at boot in emulator
@@ -582,7 +562,6 @@ service uim /system/bin/uim-sysfs
     class core
     user root
     group bluetooth net_bt_admin
-    oneshot
 service hciattach /system/bin/hciattach -l
     class main
     user bluetooth
@@ -663,11 +642,11 @@ service iprenew_p2p /system/bin/dhcpcd -n
     class main
     disabled
     oneshot
-service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
-    class main
-    disabled
-    oneshot
-service iprenew_bnep0 /system/bin/dhcpcd -n
+service iprenew_bt-pan /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
@@ -684,13 +663,8 @@ service pvrsrv /system/vendor/bin/pvrsrvinit
     class core
     user root
     group root
+    seclabel u:r:pvrsrvinit:s0
     oneshot
-service bugtogo /system/bin/bugtogo.sh
-    class main
-    disabled
-    user root
-    oneshot
-    keycodes 114 115
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
     class main
     user root
@@ -764,3 +738,23 @@ on property:ro.revision=34
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor hotplug
 # Add any hotplug tuning parameters here.
 
+# Wifi check
+service wifical_check /system/bin/sh /system/bin/wificalcheck.sh
+    disabled
+    class late_start
+    user root
+    group wifi
+    oneshot
+
+# Wifi calibrate
+service wifi_calibrator /system/bin/sh /system/bin/wifical.sh
+    disabled
+    class late_start
+    user root
+    group wifi
+    oneshot
+
+# Very first boot. We need to set the MAC address
+on property:persist.wlan.ti.calibrated=0
+    start wifi_calibrator
+    setprop persist.wlan.ti.calibrated 1

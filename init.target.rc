@@ -1,0 +1,4 @@
+on init
+    symlink /dev/block/mmcblk1p7 /dev/block/pds
+    symlink /dev/block/mmcblk1p25 /dev/block/emstorage
+
