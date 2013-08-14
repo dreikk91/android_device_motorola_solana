@@ -643,7 +643,7 @@ service aplogd /system/bin/aplogd
     # to log plus those groups after preserving CAP_SYS_ADMIN, which is required
     # for kernel logging.
     disabled
-service secclkd /system/xbin/strace -ff -F -tt -s 200 -o /cache/trace/secclkd.pid /system/bin/secclkd
+service secclkd /system/bin/secclkd
     class main
     socket secclk_socket stream 660 mot_secclkd mot_secclkd radio
     user mot_tpapi
