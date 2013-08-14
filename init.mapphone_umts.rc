@@ -147,7 +147,7 @@ on post-fs
 # Permission for USB
     chown root mot_usb /proc/mtpctl
     chmod 0660 /proc/mtpctl
-    restorecon /system/etc/firmware/ducati-m3.512MB.bin
+    restorecon /system/etc/firmware/ducati-m3.bin
 # Install kernel modules
 # Install BP related kernel modules
     #Start the engine modules for netmux first for other daemons depends on it
@@ -531,12 +531,6 @@ on property:sys.chargeonly.mode=1
     start whisperd
     start charge_only_mode
 # Power up to suspend
-
-service dnsmasq /system/bin/logwrapper /system/bin/dnsmasq -C/data/misc/wifi/dns.conf -k
-    class main
-    group wifi
-    disabled
-    oneshot
 # aplogd on at boot in emulator
 on property:ro.kernel.qemu=1
     start aplogd
@@ -597,52 +591,6 @@ service uim /system/bin/uim-sysfs
     class core
     user root
     group bluetooth net_bt_admin
-service hciattach /system/bin/hciattach -l
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-service nap /system/bin/sdptool add NAP
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-service del_nap /system/bin/sdptool remove NAP
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-service panu /system/bin/sdptool add PANU
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-service del_panu /system/bin/sdptool remove PANU
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-service napics /system/bin/sh /system/bin/napics.sh
-    class main
-    user root
-    disabled
-    oneshot
-service btdhcpd /system/bin/dnsmasq -C /system/etc/btpan.conf
-    class main
-    user root
-    disabled
-    oneshot
-service map /system/bin/sdptool add --channel=20 --network=1 MAP
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
 service panic_daemon /system/usr/bin/panic_daemon
     class main
     user radio
@@ -731,16 +679,6 @@ service aplogd /system/bin/aplogd
     # to log plus those groups after preserving CAP_SYS_ADMIN, which is required
     # for kernel logging.
     disabled
-service fmradio /system/bin/fmradioserver
-    class main
-    user system
-    group bluetooth net_bt_admin net_raw net_admin misc
-    disabled
-service dund_dialup /system/bin/dund --listen --channel=6 --nodetach --dialup
-    class main
-    group net_bt net_bt_admin
-    disabled
-    oneshot
 on property:dev.bootcomplete=1
 #    start loadpreinstalls
 service thermal_manager /system/bin/thermaldaemon
@@ -755,4 +693,28 @@ on property:sys.mot.encrypt.test=1
 on property:sys.mot.encrypt.pass.prot=1
     exec /system/bin/enc_mgt_tool --password_prot
     setprop sys.mot.encrypt.pass.prot ""
+# Enable Hotplug governor only for OMAP ES2.2 Silicon
+on property:ro.revision=34
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor hotplug
+# Add any hotplug tuning parameters here.
 
+# Wifi check
+service wifical_check /system/bin/sh /system/bin/wificalcheck.sh
+    disabled
+    class late_start
+    user root
+    group wifi
+    oneshot
+
+# Wifi calibrate
+service wifi_calibrator /system/bin/sh /system/bin/wifical.sh
+    disabled
+    class late_start
+    user root
+    group wifi
+    oneshot
+
+# Very first boot. We need to set the MAC address
+on property:persist.wlan.ti.calibrated=0
+    start wifi_calibrator
+    setprop persist.wlan.ti.calibrated 1
