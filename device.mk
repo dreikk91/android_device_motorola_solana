@@ -54,9 +54,11 @@ PRODUCT_COPY_FILES += \
     $(OUT)/ramdisk.img:system/etc/kexec/ramdisk.img \
     $(OUT)/kernel:system/etc/kexec/kernel
 
+# HASH: Removed for now, causes a crash
+#    $(DEVICE_FOLDER)/prebuilt/etc/firmware/ducati-m3.bin:system/etc/firmware/ducati-m3.bin \
+
 # Prebuilts
 PRODUCT_COPY_FILES += \
-    $(DEVICE_FOLDER)/prebuilt/etc/firmware/ducati-m3.bin:system/etc/firmware/ducati-m3.bin \
     $(DEVICE_FOLDER)/prebuilt/usr/idc/cpcap-key.idc:system/usr/idc/cpcap-key.idc \
     $(DEVICE_FOLDER)/prebuilt/usr/idc/light-prox.idc:system/usr/idc/light-prox.idc \
     $(DEVICE_FOLDER)/prebuilt/usr/idc/mapphone-switch.idc:system/usr/idc/mapphone-switch.idc \
