@@ -12,11 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# This file is the build configuration for a full Android
+# build for solana hardware. This cleanly combines a set of
+# device-specific aspects (drivers) with a device-agnostic
+# product configuration (apps). Except for a few implementation
+# details, it only fundamentally contains two inherit-product
+# lines, full and solana, hence its name.
+#
+
 # Camera and Gallery
 PRODUCT_PACKAGES := \
     Gallery
 
 #if we do this after the full_base_telephony is included some of these don't get picked up..
+ifeq ($(TARGET_PRODUCT),full_solana)
+PRODUCT_COPY_FILES += \
+    device/motorola/solana/prebuilt/etc/apns-conf.xml:system/etc/apns-conf.xml
+endif
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml
 
@@ -25,7 +39,6 @@ PRODUCT_BUILD_PROP_OVERRIDES += PRODUCT_NAME=cdma_solana
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from solana device
-$(call inherit-product-if-exists, device/motorola/kexec/kexec.mk)
 $(call inherit-product, device/motorola/solana/device.mk)
 
 # Set those variables here to overwrite the inherited values.
