@@ -696,7 +696,7 @@ service wifi_calibrator /system/bin/sh /system/bin/wifical.sh
     user root
     group wifi
     oneshot
-setprop persist.service.zram 9
+
 
 # Very first boot. We need to set the MAC address
 on property:persist.wlan.ti.calibrated=0
