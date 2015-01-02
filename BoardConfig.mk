@@ -20,7 +20,7 @@
 # definition file).
 #
 
-TARGET_USES_CUSTOM_INITFILES := true
+#TARGET_USES_CUSTOM_INITFILES := true
 TARGET_USES_CUSTOM_KEXECFILES := true
 
 # inherit from common

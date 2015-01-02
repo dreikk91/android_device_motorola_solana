@@ -20,7 +20,7 @@ DEVICE_FOLDER := device/motorola/solana
 TARGET_USES_CUSTOM_KEXECFILES := true
 
 # Device overlay
-DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay/aosp
+DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay
 
 $(call inherit-product, device/motorola/omap4-common/common.mk)
 
